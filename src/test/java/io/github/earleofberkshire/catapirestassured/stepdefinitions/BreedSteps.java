@@ -108,28 +108,45 @@ public class BreedSteps {
     Response response = scenarioContext.getResponse();
     Assertions.assertNotNull(response, "Response should not be null");
 
-    List<Map<String, ?>> breedDetailsList = response.jsonPath().getList("$");
+    Object responseBody = response.jsonPath().get("$");
 
-    Assertions.assertNotNull(breedDetailsList, "Breed details list should not be null");
-    Assertions.assertFalse(breedDetailsList.isEmpty(), "Breed details list should not be empty");
+    if (responseBody instanceof List) {
+      // Handle list of breed details (e.g., from search results)
+      List<Map<String, ?>> breedDetailsList = (List<Map<String, ?>>) responseBody;
 
-    boolean breedFound = false;
-    Map<String, ?> foundBreed = null;
+      Assertions.assertNotNull(breedDetailsList, "Breed details list should not be null");
+      Assertions.assertFalse(breedDetailsList.isEmpty(), "Breed details list should not be empty");
 
-    for (Map<String, ?> breed : breedDetailsList) {
-      String actualBreedName = (String) breed.get("name");
-      if (actualBreedName != null && actualBreedName.equals(expectedBreedName)) {
-        breedFound = true;
-        foundBreed = breed;
-        break;
+      boolean breedFound = false;
+      Map<String, ?> foundBreed = null;
+
+      for (Map<String, ?> breed : breedDetailsList) {
+        String actualBreedName = (String) breed.get("name");
+        if (actualBreedName != null && actualBreedName.equals(expectedBreedName)) {
+          breedFound = true;
+          foundBreed = breed;
+          break;
+        }
       }
-    }
 
-    Assertions.assertTrue(breedFound, "Breed details for '" + expectedBreedName + "' not found in response.");
+      Assertions.assertTrue(breedFound, "Breed details for '" + expectedBreedName + "' not found in response.");
 
-    if (foundBreed != null) {
+      if (foundBreed != null) {
+        // Optional: Add more assertions to check other breed details
+        // Example: Assert.assertNotNull(foundBreed.get("temperament"));
+      }
+    } else if (responseBody instanceof Map) {
+      // Handle single breed object (e.g., from breed ID lookup)
+      Map<String, ?> breed = (Map<String, ?>) responseBody;
+      String actualBreedName = (String) breed.get("name");
+
+      Assertions.assertNotNull(actualBreedName, "Breed name should not be null");
+      Assertions.assertEquals(expectedBreedName, actualBreedName, "Breed name does not match expected breed name.");
+
       // Optional: Add more assertions to check other breed details
-      // Example: Assert.assertNotNull(foundBreed.get("temperament"));
+      // Example: Assert.assertNotNull(breed.get("temperament"));
+    } else {
+      Assertions.fail("Unexpected response type.");
     }
   }
 
