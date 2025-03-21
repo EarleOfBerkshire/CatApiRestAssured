@@ -20,7 +20,7 @@ Feature: Breeds
   Scenario: Retrieve breed with invalid ID
     Given I have an invalid breed ID "invalid_id"
     When I send a GET request to "/v1/breeds/{breed_id}"
-    Then the response status code should be 200
+    Then the response status code should be 400
     And the response should indicate "INVALID_DATA"
 
   Scenario: Search breeds with empty name

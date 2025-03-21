@@ -1,21 +1,18 @@
 package io.github.earleofberkshire.catapirestassured.stepdefinitions;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasKey;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.github.earleofberkshire.catapirestassured.pageobjects.BreedPage;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasKey;
+import org.junit.jupiter.api.Assertions;
 
 public class BreedSteps {
 
@@ -74,27 +71,36 @@ public class BreedSteps {
   @Then("the response should contain breeds matching {string}")
   public void theResponseShouldContainBreedsMatching(String expectedBreedName) {
     Response response = scenarioContext.getResponse();
-
     Assertions.assertNotNull(response, "Response should not be null");
 
-    List<Map<String, ?>> breeds = response.jsonPath().getList("$");
+    Object responseBody = response.jsonPath().get("$");
 
-    Assertions.assertNotNull(breeds, "Breeds list should not be null");
-    Assertions.assertFalse(breeds.isEmpty(), "Breeds list should not be empty");
+    if (responseBody instanceof List) {
+      List<Map<String, ?>> breeds = (List<Map<String, ?>>) responseBody;
 
-    boolean breedFound = false;
+      Assertions.assertNotNull(breeds, "Breeds list should not be null");
+      Assertions.assertFalse(breeds.isEmpty(), "Breeds list should not be empty");
 
-    for (Map<String, ?> breed : breeds) {
-      String breedName =
-              (String) breed.get("name"); // Assuming the breed name is in the 'name' field
-      if (breedName != null && breedName.toLowerCase().contains(expectedBreedName.toLowerCase())) {
-        breedFound = true;
-        break; // Exit the loop as soon as a match is found
+      boolean breedFound = false;
+
+      for (Map<String, ?> breed : breeds) {
+        String breedName = (String) breed.get("name");
+        if (breedName != null && breedName.toLowerCase().contains(expectedBreedName.toLowerCase())) {
+          breedFound = true;
+          break;
+        }
       }
-    }
 
-    Assertions.assertTrue(
-            breedFound, "No breeds matching '" + expectedBreedName + "' found in the response.");
+      Assertions.assertTrue(breedFound, "No breeds matching '" + expectedBreedName + "' found in the response.");
+    } else if (responseBody instanceof Map) {
+      Map<String, ?> breed = (Map<String, ?>) responseBody;
+      String breedName = (String) breed.get("name");
+
+      Assertions.assertNotNull(breedName, "Breed name should not be null");
+      Assertions.assertTrue(breedName.toLowerCase().contains(expectedBreedName.toLowerCase()), "Breed name does not match expected breed name.");
+    } else {
+      Assertions.fail("Unexpected response type.");
+    }
   }
 
   @Then("the response should contain breed details for {string}")

@@ -38,20 +38,35 @@ public class CommonSteps {
     public void iSendAGETRequestTo(String endpoint) {
         Map<String, java.util.function.Supplier<Response>> endpointActions = new HashMap<>();
 
-        //Breed Endpoints
+        // Breed Endpoints
         endpointActions.put("/v1/breeds/search", () -> breedPage.searchBreedsByName(scenarioContext.getBreedName()));
-        endpointActions.put("/v1/breeds/" + scenarioContext.getBreedId(), () -> breedPage.getBreedById(scenarioContext.getBreedId()));
+        endpointActions.put("/v1/breeds/{breed_id}", () -> breedPage.getBreedById(scenarioContext.getBreedId()));
         endpointActions.put("/v1/breeds", breedPage::getAllBreeds);
 
-        //Category Endpoints
+        // Category Endpoints
         endpointActions.put("/v1/categories", categoryPage::getAllCategories);
 
+        // Construct the actual endpoint for the lambda.
+        String lambdaEndpoint;
+
+        // Check for breed-specific requests, but exclude search requests.
+        if (endpoint.startsWith("/v1/breeds/") && endpoint.length() > "/v1/breeds/".length() && !endpoint.contains("search")) {
+            lambdaEndpoint = "/v1/breeds/{breed_id}"; //Use the endpoint with the placeholder.
+        } else if (endpoint.startsWith("/v1/breeds/search")) {
+            lambdaEndpoint = "/v1/breeds/search"; //use the search endpoint.
+        } else {
+            lambdaEndpoint = endpoint;
+        }
+
         Response response = endpointActions.entrySet().stream()
-                .filter(entry -> endpoint.contains(entry.getKey()))
+                .filter(entry -> entry.getKey().equals(lambdaEndpoint)) //use .equals to ensure exact match.
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .map(java.util.function.Supplier::get)
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported endpoint: " + endpoint));
+
+        System.out.println("*_*_**_*_*_*_*_*_*_ request url: " + endpoint);
+        System.out.println("API Response: " + response.getBody().asString());
 
         scenarioContext.setResponse(response);
     }
