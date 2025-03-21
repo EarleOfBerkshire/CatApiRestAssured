@@ -1,12 +1,15 @@
-package io.github.earleofberkshire.catapirestassured.stepdefinitions;
+package io.github.earleofberkshire.catapirestaassured.stepdefinitions;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
+import io.github.earleofberkshire.catapirestassured.pageobjects.BreedPage;
 import io.restassured.response.Response;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
@@ -14,9 +17,37 @@ import org.junit.jupiter.api.Assertions;
 public class BreedSteps {
 
   private ScenarioContext scenarioContext;
+  private BreedPage breedPage;
 
   public BreedSteps(ScenarioContext scenarioContext) throws IOException {
     this.scenarioContext = scenarioContext;
+    Properties properties = new Properties();
+    FileInputStream input = new FileInputStream("src/test/resources/application.properties");
+    properties.load(input);
+
+    String apiKey = properties.getProperty("api.key");
+    String baseUrl = properties.getProperty("base.url");
+
+    breedPage = new BreedPage(apiKey, baseUrl);
+  }
+
+  @When("I send a GET request to {string}")
+  public void iSendAGETRequestTo(String endpoint) {
+    Map<String, java.util.function.Supplier<Response>> endpointActions = new HashMap<>();
+
+    //Breed Endpoints
+    endpointActions.put("/v1/breeds/search", () -> breedPage.searchBreedsByName(scenarioContext.getBreedName()));
+    endpointActions.put("/v1/breeds/" + scenarioContext.getBreedId(), () -> breedPage.getBreedById(scenarioContext.getBreedId()));
+    endpointActions.put("/v1/breeds", breedPage::getAllBreeds);
+
+    Response response = endpointActions.entrySet().stream()
+            .filter(entry -> endpoint.contains(entry.getKey()))
+            .findFirst()
+            .map(Map.Entry::getValue)
+            .map(java.util.function.Supplier::get)
+            .orElseThrow(() -> new IllegalArgumentException("Unsupported endpoint: " + endpoint));
+
+    scenarioContext.setResponse(response);
   }
 
   @Given("I have a breed name {string}")
@@ -37,7 +68,6 @@ public class BreedSteps {
   @Then("the response should contain a list of breeds")
   public void theResponseShouldContainAListOfBreeds() {
     Response response = scenarioContext.getResponse();
-
     Assertions.assertNotNull(response, "Response should not be null");
 
     List<Object> breeds = response.jsonPath().getList("$");
@@ -71,7 +101,7 @@ public class BreedSteps {
 
     for (Map<String, ?> breed : breeds) {
       String breedName =
-          (String) breed.get("name"); // Assuming the breed name is in the 'name' field
+              (String) breed.get("name"); // Assuming the breed name is in the 'name' field
       if (breedName != null && breedName.toLowerCase().contains(expectedBreedName.toLowerCase())) {
         breedFound = true;
         break; // Exit the loop as soon as a match is found
@@ -79,13 +109,12 @@ public class BreedSteps {
     }
 
     Assertions.assertTrue(
-        breedFound, "No breeds matching '" + expectedBreedName + "' found in the response.");
+            breedFound, "No breeds matching '" + expectedBreedName + "' found in the response.");
   }
 
   @Then("the response should contain breed details for {string}")
   public void theResponseShouldContainBreedDetailsFor(String expectedBreedName) {
     Response response = scenarioContext.getResponse();
-
     Assertions.assertNotNull(response, "Response should not be null");
 
     List<Map<String, ?>> breedDetailsList = response.jsonPath().getList("$");
@@ -105,8 +134,7 @@ public class BreedSteps {
       }
     }
 
-    Assertions.assertTrue(
-        breedFound, "Breed details for '" + expectedBreedName + "' not found in response.");
+    Assertions.assertTrue(breedFound, "Breed details for '" + expectedBreedName + "' not found in response.");
 
     if (foundBreed != null) {
       // Optional: Add more assertions to check other breed details
@@ -117,7 +145,6 @@ public class BreedSteps {
   @Then("the response should be an empty array")
   public void theResponseShouldBeAnEmptyArray() {
     Response response = scenarioContext.getResponse();
-
     Assertions.assertNotNull(response, "Response should not be null");
 
     List<?> responseList = response.jsonPath().getList("$"); // Get the response as a list
