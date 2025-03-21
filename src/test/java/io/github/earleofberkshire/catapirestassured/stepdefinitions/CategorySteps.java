@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 
 import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
+import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.github.earleofberkshire.catapirestassured.pageobjects.CategoryPage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Assertions;
 
 public class CategorySteps {
 
-    private Response response;
+    private ScenarioContext scenarioContext;
     private CategoryPage categoryPage;
 
     public CategorySteps() throws IOException {
@@ -27,12 +28,11 @@ public class CategorySteps {
         categoryPage = new CategoryPage(apiKey, baseUrl);
     }
 
-    public void setResponse(Response response) {
-        this.response = response;
-    }
 
     @Then("the response should contain a list of categories")
     public void theResponseShouldContainAListOfCategories() {
+
+        Response response = scenarioContext.getResponse();
         Assertions.assertNotNull(response, "Response should not be null");
 
         List<Object> categories = response.jsonPath().getList("$");
@@ -53,6 +53,8 @@ public class CategorySteps {
 
     @Then("all category IDs should be unique")
     public void allCategoryIDsShouldBeUnique() {
+        Response response = scenarioContext.getResponse();
+
         Assertions.assertNotNull(response, "Response should not be null");
 
         List<Map<String, ?>> categories = response.jsonPath().getList("$");
