@@ -46,9 +46,7 @@ public class CommonSteps {
     if (baseEndpoint.equals("/v1/breeds/search")) {
       response = apiClient.get(endpoint, null);
     } else if (baseEndpoint.startsWith("/v1/breeds/") && !baseEndpoint.equals("/v1/breeds")) {
-      response =
-          apiClient.get(
-              "/v1/breeds/{breed_id}".replace("{breed_id}", scenarioContext.getBreedId()), null);
+      response = apiClient.get("/v1/breeds/{breed_id}".replace("{breed_id}", scenarioContext.getBreedId()), null);
     } else if (baseEndpoint.equals("/v1/breeds")) {
       response = apiClient.get(endpoint, null);
     } else if (baseEndpoint.equals("/v1/categories")) {
