@@ -1,4 +1,4 @@
-package io.github.earleofberkshire.catapirestaassured.stepdefinitions;
+package io.github.earleofberkshire.catapirestassured.stepdefinitions;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -31,24 +31,6 @@ public class BreedSteps {
     breedPage = new BreedPage(apiKey, baseUrl);
   }
 
-  @When("I send a GET request to {string}")
-  public void iSendAGETRequestTo(String endpoint) {
-    Map<String, java.util.function.Supplier<Response>> endpointActions = new HashMap<>();
-
-    //Breed Endpoints
-    endpointActions.put("/v1/breeds/search", () -> breedPage.searchBreedsByName(scenarioContext.getBreedName()));
-    endpointActions.put("/v1/breeds/" + scenarioContext.getBreedId(), () -> breedPage.getBreedById(scenarioContext.getBreedId()));
-    endpointActions.put("/v1/breeds", breedPage::getAllBreeds);
-
-    Response response = endpointActions.entrySet().stream()
-            .filter(entry -> endpoint.contains(entry.getKey()))
-            .findFirst()
-            .map(Map.Entry::getValue)
-            .map(java.util.function.Supplier::get)
-            .orElseThrow(() -> new IllegalArgumentException("Unsupported endpoint: " + endpoint));
-
-    scenarioContext.setResponse(response);
-  }
 
   @Given("I have a breed name {string}")
   public void iHaveABreedName(String breedName) {
