@@ -1,5 +1,7 @@
 package io.github.earleofberkshire.catapirestassured.pageobjects;
 
+import io.restassured.response.Response;
+
 import java.io.IOException;
 
 public class VotesPage extends BasePage {
@@ -7,9 +9,9 @@ public class VotesPage extends BasePage {
   public VotesPage() throws IOException {
     super();
   }
-  //    public Response getAllBreeds() {
-  //        return given().header("x-api-key", apiKey).when().get("/breeds");
-  //    }
 
-  // ... other methods for breed-related endpoints
+    public Response getAllVotes() {
+      return apiClient.get("/votes", null);
+    }
+
 }

@@ -85,7 +85,7 @@ public class BreedSteps {
 
       for (Map<String, ?> breed : breeds) {
         String breedName = (String) breed.get("name");
-        if (breedName != null && breedName.toLowerCase().contains(expectedBreedName.toLowerCase())) {
+        if (breedName != null && breedName.equalsIgnoreCase(expectedBreedName)) {
           breedFound = true;
           break;
         }
@@ -97,7 +97,7 @@ public class BreedSteps {
       String breedName = (String) breed.get("name");
 
       Assertions.assertNotNull(breedName, "Breed name should not be null");
-      Assertions.assertTrue(breedName.toLowerCase().contains(expectedBreedName.toLowerCase()), "Breed name does not match expected breed name.");
+      Assertions.assertTrue(breedName.equalsIgnoreCase(expectedBreedName), "Breed name does not match expected breed name.");
     } else {
       Assertions.fail("Unexpected response type.");
     }

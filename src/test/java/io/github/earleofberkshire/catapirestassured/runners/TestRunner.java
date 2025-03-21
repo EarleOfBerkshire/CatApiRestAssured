@@ -17,6 +17,6 @@ import org.junit.runner.RunWith;
       "io.github.earleofberkshire.catapirestassured.api"
     },
     plugin = {"pretty", "html:target/cucumber-reports.html"}, // Reporting plugins
-    tags = "@breeds or @categories" // Optional: Add tags to run specific scenarios or features
+    tags = "@breeds or @categories or @votes" // Optional: Add tags to run specific scenarios or features
     )
 public class TestRunner {}

@@ -14,14 +14,10 @@ public class BreedPage extends BasePage {
   }
 
   public Response searchBreedsByName(String breedName) {
-    return apiClient.get("/breeds/search", java.util.Collections.singletonMap("q", breedName));
+    return apiClient.get("/breeds/search?q=" + breedName, null);
   }
 
   public Response getBreedById(String breedId) {
     return apiClient.get("/breeds/" + breedId, null);
-  }
-
-  public Response getBreedsSearch(String endpoint) {
-    return apiClient.get(endpoint, null);
   }
 }
