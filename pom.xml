@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cucumber.version>7.21.1</cucumber.version>
-        <rest-assured.version>4.4.0</rest-assured.version>
+        <rest-assured.version>5.4.0</rest-assured.version>
         <junit.version>5.8.1</junit.version>
         <hamcrest.version>2.2</hamcrest.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -30,6 +30,12 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
