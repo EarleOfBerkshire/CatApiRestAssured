@@ -26,7 +26,7 @@ public class CommonSteps {
     Response response;
 
     if (endpoint.startsWith("/v1/breeds/search")) {
-      response = breedPage.searchBreedsByName(endpoint.substring(endpoint.indexOf("=") + 1));
+      response = breedPage.getBreedsSearch(endpoint);
     } else if (endpoint.startsWith("/v1/breeds/") && !endpoint.equals("/v1/breeds")) {
       response = breedPage.getBreedById(scenarioContext.getBreedId());
     } else if (endpoint.equals("/v1/breeds")) {

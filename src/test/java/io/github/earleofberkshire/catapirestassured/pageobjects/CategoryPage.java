@@ -6,7 +6,7 @@ import static io.restassured.RestAssured.given;
 public class CategoryPage extends BasePage {
 
     public CategoryPage(String apiKey, String baseUrl) {
-        super(apiKey, baseUrl);
+        super();
     }
 
     public Response getAllCategories() {

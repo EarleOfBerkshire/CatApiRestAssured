@@ -28,7 +28,7 @@ public class BreedSteps {
     String apiKey = properties.getProperty("api.key");
     String baseUrl = properties.getProperty("base.url");
 
-    breedPage = new BreedPage(apiKey, baseUrl);
+    breedPage = new BreedPage();
   }
 
 

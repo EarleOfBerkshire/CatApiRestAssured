@@ -1,26 +1,30 @@
 package io.github.earleofberkshire.catapirestassured.pageobjects;
 
+import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.restassured.response.Response;
-import static io.restassured.RestAssured.given;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.io.IOException;
 
 public class BreedPage extends BasePage {
 
-  public BreedPage(String apiKey, String baseUrl) {
-    super(apiKey, baseUrl);
+  public BreedPage() throws IOException {
+    super();
   }
 
   public Response getAllBreeds() {
-    return given().header("x-api-key", apiKey).when().get("/breeds");
-  }
-
-  public Response getBreedById(String breedId) {
-    return given().header("x-api-key", apiKey).when().get("/breeds/" + breedId);
+    return apiClient.get("/v1/breeds", null);
   }
 
   public Response searchBreedsByName(String breedName) {
-    return given()
-        .header("x-api-key", apiKey)
-        .when()
-        .get("/breeds/search?attach_image=1&q=" + breedName);
+    return apiClient.get("/v1/breeds/search?q=" + breedName, null);
+  }
+
+  public Response getBreedById(String breedId) {
+    return apiClient.get("/v1/breeds/" + breedId, null);
+  }
+
+  public Response getBreedsSearch(String endpoint) {
+    return apiClient.get(endpoint, null);
   }
 }
