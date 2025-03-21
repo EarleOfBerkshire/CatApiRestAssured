@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources/features", // Path to feature files
-        glue = "io.github.earleofberkshire.catapirestassured.stepdefinitions", // Package containing step definitions
+        glue = {"io.github.earleofberkshire.catapirestassured.stepdefinitions", "io.github.earleofberkshire.catapirestassured.context"}, // Package containing step definitions
         plugin = {"pretty", "html:target/cucumber-reports.html"}, // Reporting plugins
         tags = "@breeds or @categories" // Optional: Add tags to run specific scenarios or features
 )
