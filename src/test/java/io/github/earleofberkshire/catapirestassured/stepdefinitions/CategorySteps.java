@@ -4,9 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import io.cucumber.java.en.Then;
-import io.restassured.response.Response;
+import io.cucumber.java.en.When;
 import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.github.earleofberkshire.catapirestassured.pageobjects.CategoryPage;
+import io.restassured.response.Response;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -17,7 +18,8 @@ public class CategorySteps {
     private ScenarioContext scenarioContext;
     private CategoryPage categoryPage;
 
-    public CategorySteps() throws IOException {
+    public CategorySteps(ScenarioContext scenarioContext) throws IOException {
+        this.scenarioContext = scenarioContext;
         Properties properties = new Properties();
         FileInputStream input = new FileInputStream("src/test/resources/application.properties");
         properties.load(input);
@@ -31,7 +33,6 @@ public class CategorySteps {
 
     @Then("the response should contain a list of categories")
     public void theResponseShouldContainAListOfCategories() {
-
         Response response = scenarioContext.getResponse();
         Assertions.assertNotNull(response, "Response should not be null");
 
@@ -41,8 +42,8 @@ public class CategorySteps {
         Assertions.assertFalse(categories.isEmpty(), "Categories list should not be empty");
 
         for (Object category : categories) {
-            if (category instanceof Map) { // Check if the category object is a map
-                Map<String, ?> categoryMap = (Map<String, ?>) category; // Cast to Map
+            if (category instanceof Map) {
+                Map<String, ?> categoryMap = (Map<String, ?>) category;
                 assertThat(categoryMap, hasKey("id"));
                 assertThat(categoryMap, hasKey("name"));
             } else {
@@ -54,7 +55,6 @@ public class CategorySteps {
     @Then("all category IDs should be unique")
     public void allCategoryIDsShouldBeUnique() {
         Response response = scenarioContext.getResponse();
-
         Assertions.assertNotNull(response, "Response should not be null");
 
         List<Map<String, ?>> categories = response.jsonPath().getList("$");
@@ -73,5 +73,4 @@ public class CategorySteps {
             Assertions.assertTrue(added, "Duplicate category ID found: " + categoryId);
         }
     }
-
 }
