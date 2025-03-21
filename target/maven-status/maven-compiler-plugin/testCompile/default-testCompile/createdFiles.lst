@@ -1,0 +1,11 @@
+io/github/earleofberkshire/catapirestassured/pageobjects/BasePage.class
+io/github/earleofberkshire/catapirestassured/pageobjects/FavouritesPage.class
+io/github/earleofberkshire/catapirestassured/stepdefinitions/BreedSteps.class
+io/github/earleofberkshire/catapirestassured/stepdefinitions/CategorySteps.class
+io/github/earleofberkshire/catapirestassured/pageobjects/ImagePage.class
+io/github/earleofberkshire/catapirestassured/stepdefinitions/CommonSteps.class
+io/github/earleofberkshire/catapirestassured/pageobjects/VotesPage.class
+io/github/earleofberkshire/catapirestassured/pageobjects/AnalysisPage.class
+io/github/earleofberkshire/catapirestassured/runners/TestRunner.class
+io/github/earleofberkshire/catapirestassured/pageobjects/BreedPage.class
+io/github/earleofberkshire/catapirestassured/pageobjects/CategoryPage.class
