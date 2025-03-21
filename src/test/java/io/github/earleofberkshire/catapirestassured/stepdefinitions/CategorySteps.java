@@ -27,7 +27,7 @@ public class CategorySteps {
         String apiKey = properties.getProperty("api.key");
         String baseUrl = properties.getProperty("base.url");
 
-        categoryPage = new CategoryPage(apiKey, baseUrl);
+        categoryPage = new CategoryPage();
     }
 
 

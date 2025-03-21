@@ -1,17 +1,12 @@
 package io.github.earleofberkshire.catapirestassured.pageobjects;
 
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.given;
+
+import java.io.IOException;
 
 public class FavouritesPage extends BasePage {
 
-    public FavouritesPage(String apiKey, String baseUrl) {
-        super(apiKey, baseUrl);
+    public FavouritesPage() throws IOException {
+        super();
     }
-
-//    public Response getAllBreeds() {
-//        return given().header("x-api-key", apiKey).when().get("/breeds");
-//    }
-
     // ... other methods for breed-related endpoints
 }

@@ -1,14 +1,11 @@
 package io.github.earleofberkshire.catapirestassured.pageobjects;
-
-import io.restassured.response.Response;
-import static io.restassured.RestAssured.given;
+import java.io.IOException;
 
 public class ImagePage extends BasePage {
 
-    public ImagePage(String apiKey, String baseUrl) {
-        super(apiKey, baseUrl);
+    public ImagePage() throws IOException {
+        super();
     }
-
 //    public Response getAllBreeds() {
 //        return given().header("x-api-key", apiKey).when().get("/breeds");
 //    }
