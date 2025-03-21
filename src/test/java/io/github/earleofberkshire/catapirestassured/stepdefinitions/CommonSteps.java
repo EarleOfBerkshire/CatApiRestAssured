@@ -20,7 +20,7 @@ public class CommonSteps {
     private CategoryPage categoryPage;
     private ScenarioContext scenarioContext;
 
-    public CommonSteps(ScenarioContext scenarioContext) throws IOException {
+    public CommonSteps(ScenarioContext scenarioContext) throws IOException { // Make sure this is public
         this.scenarioContext = scenarioContext;
         Properties properties = new Properties();
         try (FileInputStream input = new FileInputStream("src/test/resources/application.properties")) {

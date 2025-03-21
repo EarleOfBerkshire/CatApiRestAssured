@@ -1,25 +1,28 @@
 package io.github.earleofberkshire.catapirestassured.stepdefinitions;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.github.earleofberkshire.catapirestassured.pageobjects.BreedPage;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
+
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
-import org.junit.jupiter.api.Assertions;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasKey;
 
 public class BreedSteps {
 
   private ScenarioContext scenarioContext;
   private BreedPage breedPage;
 
-  public BreedSteps(ScenarioContext scenarioContext) throws IOException {
+  public BreedSteps(ScenarioContext scenarioContext) throws IOException { // Make sure this is public
     this.scenarioContext = scenarioContext;
     Properties properties = new Properties();
     FileInputStream input = new FileInputStream("src/test/resources/application.properties");
