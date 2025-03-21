@@ -1,9 +1,6 @@
 package io.github.earleofberkshire.catapirestassured.pageobjects;
 
-import io.github.earleofberkshire.catapirestassured.context.ScenarioContext;
 import io.restassured.response.Response;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.IOException;
 
 public class BreedPage extends BasePage {
@@ -17,7 +14,7 @@ public class BreedPage extends BasePage {
   }
 
   public Response searchBreedsByName(String breedName) {
-    return apiClient.get("/v1/breeds/search?q=" + breedName, null);
+    return apiClient.get("/v1/breeds/search", java.util.Collections.singletonMap("q", breedName));
   }
 
   public Response getBreedById(String breedId) {
