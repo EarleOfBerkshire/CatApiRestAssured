@@ -1,3 +1,5 @@
+package io.github.earleofberkshire.catapirestassured.stepdefinitions;
+
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.earleofberkshire.catapirestassured.api.ApiClient;
@@ -12,49 +14,61 @@ import java.util.Properties;
 
 public class CommonSteps {
 
-    private ScenarioContext scenarioContext;
-    private BreedPage breedPage;
-    private CategoryPage categoryPage;
-    private ApiClient apiClient;
+  private ScenarioContext scenarioContext;
+  private BreedPage breedPage;
+  private CategoryPage categoryPage;
+  private ApiClient apiClient;
 
-    public CommonSteps(ScenarioContext scenarioContext) throws IOException {
-        this.scenarioContext = scenarioContext;
-        Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream("src/test/resources/application.properties")) {
-            properties.load(input);
-        }
-
-        String apiKey = properties.getProperty("api.key");
-        String baseUrl = properties.getProperty("base.url");
-
-        this.apiClient = new ApiClient(apiKey, baseUrl);
-        this.breedPage = new BreedPage(apiKey, baseUrl);
-        this.categoryPage = new CategoryPage(apiKey, baseUrl);
+  public CommonSteps(ScenarioContext scenarioContext) throws IOException {
+    this.scenarioContext = scenarioContext;
+    Properties properties = new Properties();
+    try (FileInputStream input = new FileInputStream("src/test/resources/application.properties")) {
+      properties.load(input);
     }
 
-    @When("I send a GET request to {string}")
-    public void iSendAGETRequestTo(String endpoint) {
-        Response response;
+    String apiKey = properties.getProperty("api.key");
+    String baseUrl = properties.getProperty("base.url");
 
-        if (endpoint.startsWith("/v1/breeds/search")) {
-            response = apiClient.get(endpoint, null);
-        } else if (endpoint.startsWith("/v1/breeds/") && !endpoint.equals("/v1/breeds")) {
-            response = apiClient.get("/v1/breeds/{breed_id}".replace("{breed_id}", scenarioContext.getBreedId()), null);
-        } else if (endpoint.equals("/v1/breeds")) {
-            response = apiClient.get(endpoint, null);
-        } else if (endpoint.equals("/v1/categories")) {
-            response = apiClient.get(endpoint, null);
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
+    this.apiClient = new ApiClient(apiKey, baseUrl);
+    this.breedPage = new BreedPage(apiKey, baseUrl);
+    this.categoryPage = new CategoryPage(apiKey, baseUrl);
+  }
 
-        System.out.println("API Response: " + response.getBody().asString());
-        scenarioContext.setResponse(response);
+  @When("I send a GET request to {string}")
+  public void iSendAGETRequestTo(String endpoint) {
+    Response response;
+    String baseEndpoint = endpoint;
+
+    if (endpoint.contains("?")) {
+      baseEndpoint = endpoint.substring(0, endpoint.indexOf("?"));
     }
 
-    @Then("the response status code should be {int}")
-    public void theResponseStatusCodeShouldBe(int expectedStatusCode) {
-        Assertions.assertEquals(expectedStatusCode, scenarioContext.getResponse().getStatusCode(),
-                "Expected status code " + expectedStatusCode + " but got " + scenarioContext.getResponse().getStatusCode());
+    if (baseEndpoint.equals("/v1/breeds/search")) {
+      response = apiClient.get(endpoint, null);
+    } else if (baseEndpoint.startsWith("/v1/breeds/") && !baseEndpoint.equals("/v1/breeds")) {
+      response =
+          apiClient.get(
+              "/v1/breeds/{breed_id}".replace("{breed_id}", scenarioContext.getBreedId()), null);
+    } else if (baseEndpoint.equals("/v1/breeds")) {
+      response = apiClient.get(endpoint, null);
+    } else if (baseEndpoint.equals("/v1/categories")) {
+      response = apiClient.get(endpoint, null);
+    } else {
+      throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
     }
+
+    System.out.println("API Response: " + response.getBody().asString());
+    scenarioContext.setResponse(response);
+  }
+
+  @Then("the response status code should be {int}")
+  public void theResponseStatusCodeShouldBe(int expectedStatusCode) {
+    Assertions.assertEquals(
+        expectedStatusCode,
+        scenarioContext.getResponse().getStatusCode(),
+        "Expected status code "
+            + expectedStatusCode
+            + " but got "
+            + scenarioContext.getResponse().getStatusCode());
+  }
 }
