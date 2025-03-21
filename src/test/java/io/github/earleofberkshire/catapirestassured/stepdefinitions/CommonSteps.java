@@ -24,7 +24,7 @@ public class CommonSteps {
     }
     @When("I send a GET request to {string}")
   public void iSendAGETRequestTo(String endpoint) {
-    Map<String, Supplier<Response>> e ndpointActions = new HashMap<>();
+    Map<String, Supplier<Response>> endpointActions = new HashMap<>();
 
     //Breed Endpoints
     endpointActions.put("/v1/breeds/search", () -> breedPage.searchBreedsByName(breedName));
