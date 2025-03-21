@@ -25,13 +25,13 @@ public class CommonSteps {
   public void iSendAGETRequestTo(String endpoint) {
     Response response;
 
-    if (endpoint.startsWith("/v1/breeds/search")) {
+    if (endpoint.startsWith("/breeds/search")) {
       response = breedPage.searchBreedsByName(endpoint.substring(endpoint.indexOf("=") + 1));
-    } else if (endpoint.startsWith("/v1/breeds/") && !endpoint.equals("/v1/breeds")) {
+    } else if (endpoint.startsWith("/breeds/") && !endpoint.equals("/breeds")) {
       response = breedPage.getBreedById(scenarioContext.getBreedId());
-    } else if (endpoint.equals("/v1/breeds")) {
+    } else if (endpoint.equals("/breeds")) {
       response = breedPage.getAllBreeds();
-    } else if (endpoint.equals("/v1/categories")) {
+    } else if (endpoint.equals("/categories")) {
       response = categoryPage.getAllCategories();
     } else {
       throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);

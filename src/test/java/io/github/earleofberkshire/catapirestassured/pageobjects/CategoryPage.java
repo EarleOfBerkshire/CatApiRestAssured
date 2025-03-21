@@ -10,6 +10,6 @@ public class CategoryPage extends BasePage {
     }
 
     public Response getAllCategories() {
-        return apiClient.get("/v1/categories", null);
+        return apiClient.get("/categories", null);
     }
 }

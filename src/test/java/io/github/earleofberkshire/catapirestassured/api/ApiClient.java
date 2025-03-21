@@ -24,6 +24,12 @@ public class ApiClient {
             request = request.queryParams(queryParams);
         }
 
+        // Log the complete URL
+        System.out.println("Request URL: " + baseUrl + endpoint);
+
+        //Log the headers.
+        System.out.println("Request Headers: " + request.get().getHeaders().toString());
+
         return request.get(endpoint);
     }
 }
